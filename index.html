@@ -351,6 +351,18 @@
   }
   .loan-row{display:flex;justify-content:space-between;font-size:13px;margin:6px 0;color:var(--gray);}
   .loan-row b{color:var(--pearl);}
+
+  .sp-match{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
+  .sp-team{flex:1;min-width:130px;text-align:center;padding:16px 10px;border-radius:14px;
+    background:rgba(255,255,255,0.04);border:2px solid rgba(255,255,255,0.08);cursor:pointer;transition:.15s;}
+  .sp-team:hover{border-color:rgba(126,200,227,0.5);}
+  .sp-team.picked{border-color:var(--gold2);background:rgba(232,196,104,0.12);}
+  .sp-team .flag{font-size:38px;}
+  .sp-team .tname{font-weight:800;margin-top:6px;}
+  .sp-team .trank{font-size:12px;color:var(--gray);margin-top:2px;}
+  .sp-team .todds{font-size:18px;font-weight:900;color:var(--gold2);margin-top:8px;}
+  .sp-vs{font-family:'Black Han Sans',sans-serif;font-size:20px;color:var(--gray);}
+  .sp-resultbox{min-height:30px;text-align:center;font-weight:800;font-size:16px;margin:14px 0;}
   @media(max-width:480px){
     .multi-grid{grid-template-columns:repeat(5,1fr);}
     .logo{font-size:18px;}
@@ -360,7 +372,22 @@
 </head>
 <body>
 
+<div id="webviewBanner" style="display:block;position:fixed;top:0;left:0;right:0;z-index:999;background:#e8c468;color:#231703;padding:12px 16px;font-size:13px;font-weight:700;text-align:center;line-height:1.5;">
+  ⚠ 버튼이 안 눌리면 카톡 자체 뷰어라서 그래요!<br>
+  화면의 <b>공유 아이콘(⬆️/⋮)</b> → <b>"Safari/Chrome에서 열기"</b>를 눌러 다시 열어주세요.
+  <button onclick="document.getElementById('webviewBanner').style.display='none'" style="margin-left:8px;background:#231703;color:#e8c468;border:none;border-radius:6px;padding:4px 10px;font-weight:700;">닫기</button>
+</div>
 <div class="bubbles" id="bubbles"></div>
+<script>
+  (function(){
+    const b = document.getElementById('webviewBanner');
+    document.body.style.paddingTop = b.offsetHeight + 'px';
+    b.querySelector('button').addEventListener('click', function(){
+      b.style.display = 'none';
+      document.body.style.paddingTop = '0px';
+    });
+  })();
+</script>
 
 <header>
   <div class="logo">진주<span>월드</span> 🌊</div>
@@ -376,6 +403,7 @@
   <button data-tab="shop">🏪 판매소</button>
   <button data-tab="slot">🎲 슬롯</button>
   <button data-tab="oddeven">⚖️ 홀짝</button>
+  <button data-tab="sports">⚽ 스포츠토토</button>
   <button data-tab="crypto">📈 코인거래소</button>
   <button data-tab="mission">🏆 미션</button>
   <button data-tab="attend">📅 출석</button>
@@ -395,6 +423,8 @@
       <div class="gacha-btns">
         <button class="btn btn-gold" id="pull1">1회 뽑기 (100🪙)</button>
         <button class="btn btn-outline" id="pull10">10회 뽑기 (1,000🪙)</button>
+        <button class="btn btn-outline" id="pull100">100회 뽑기 (10,000🪙)</button>
+        <button class="btn btn-outline" id="pull1000">1000회 뽑기 (100,000🪙)</button>
       </div>
       <div class="odds">
         <span class="tag" style="color:var(--gray)">꽝 40%</span>
@@ -427,7 +457,7 @@
   <!-- SLOT -->
   <section class="panel" id="panel-slot">
     <h2 class="title">슬롯머신</h2>
-    <div class="sub">성공 확률 20% · 성공 시 베팅금의 2배 획득 · 실패 시 전액 잃음</div>
+    <div class="sub">성공 확률 20% (그중 5%는 잭팟!) · 같은 그림 3개면 성공 · 잭팟이면 베팅금의 10배, 일반 성공은 2배 · 실패 시 전액 잃음</div>
     <div class="slot-machine">
       <div class="reels">
         <div class="reel" id="reel1"><div class="reel-inner">🐚</div></div>
@@ -435,15 +465,15 @@
         <div class="reel" id="reel3"><div class="reel-inner">🐚</div></div>
       </div>
       <div class="bet-row">
-        <button class="btn btn-outline btn-sm" id="betMinus">−100</button>
-        <input type="number" id="betInput" value="300" min="300" max="5000" step="100">
-        <button class="btn btn-outline btn-sm" id="betPlus">+100</button>
+        <button class="btn btn-outline btn-sm" id="betMinus">−1,000</button>
+        <input type="number" id="betInput" value="300" min="300" max="500000" step="1000">
+        <button class="btn btn-outline btn-sm" id="betPlus">+1,000</button>
       </div>
       <div class="bet-presets">
         <button class="btn btn-outline btn-sm" data-bet="300">300</button>
-        <button class="btn btn-outline btn-sm" data-bet="1000">1,000</button>
-        <button class="btn btn-outline btn-sm" data-bet="2500">2,500</button>
-        <button class="btn btn-outline btn-sm" data-bet="5000">5,000(MAX)</button>
+        <button class="btn btn-outline btn-sm" data-bet="5000">5,000</button>
+        <button class="btn btn-outline btn-sm" data-bet="50000">50,000</button>
+        <button class="btn btn-outline btn-sm" data-bet="500000">500,000(MAX)</button>
       </div>
       <button class="btn btn-red" id="spinBtn" style="font-size:17px;padding:14px 32px;">스핀!</button>
     </div>
@@ -479,6 +509,13 @@
         <button class="btn btn-outline" id="oeContinue" style="font-size:16px;padding:13px 26px;">🔥 계속하기</button>
       </div>
     </div>
+  </section>
+
+  <!-- SPORTS BETTING -->
+  <section class="panel" id="panel-sports">
+    <h2 class="title">스포츠토토 ⚽</h2>
+    <div class="sub">FIFA 랭킹이 낮은(약한) 팀에 베팅할수록 배당이 높아져요. 예측 실패 시 베팅금 전액 0원!</div>
+    <div class="slot-machine" id="sportsBox"></div>
   </section>
 
   <!-- CRYPTO -->
@@ -950,7 +987,7 @@ function sharkSteals(tier){
 }
 
 function doPull(count){
-  const cost = count===1 ? 100 : 1000;
+  const cost = count * 100;
   if(state.coins < cost){ toast('코인이 부족합니다!'); return; }
   state.coins -= cost;
   sfxClick();
@@ -958,8 +995,18 @@ function doPull(count){
   orb.classList.add('shaking');
   sfxOpen();
 
+  const cycleSyms = ['🐚','💨','⚪','🔵','🟣','🌟'];
+  let cycleIdx = 0;
+  const spinDuration = Math.min(550 + Math.log2(count+1)*120, 1400);
+  const cycleIv = setInterval(()=>{
+    orb.textContent = cycleSyms[cycleIdx % cycleSyms.length];
+    cycleIdx++;
+  }, 70);
+
   setTimeout(()=>{
+    clearInterval(cycleIv);
     orb.classList.remove('shaking');
+    orb.textContent = '🐚';
     const results = [];
     for(let i=0;i<count;i++){
       let k;
@@ -987,9 +1034,10 @@ function doPull(count){
       showMultiResult(results);
     }
     renderAll();
-  }, 550);
+  }, spinDuration);
 }
 
+const TIER_ORDER = { legendary:4, epic:3, rare:2, common:1, blank:0 };
 function showMultiResult(results){
   const card = document.getElementById('resultCard');
   const keys = results.map(r=>r.key);
@@ -997,11 +1045,12 @@ function showMultiResult(results){
                keys.includes('epic') ? 'epic' :
                keys.includes('rare') ? 'rare' : keys.includes('common') ? 'common' : 'blank';
   const stolenCount = results.filter(r=>r.stolen).length;
+  const sorted = results.slice().sort((a,b)=> TIER_ORDER[b.key]-TIER_ORDER[a.key]);
   card.innerHTML = `
-    <div class="result-name ${ITEMS[best].cls}" ${ITEMS[best].color?`style="color:${ITEMS[best].color}"`:''}>10연 뽑기 결과 ✨</div>
+    <div class="result-name ${ITEMS[best].cls}" ${ITEMS[best].color?`style="color:${ITEMS[best].color}"`:''}>${results.length}연 뽑기 결과 ✨</div>
     ${stolenCount>0 ? `<div style="color:var(--danger);font-weight:700;font-size:13px;margin-top:4px;">💀 사채업자가 ${stolenCount}개를 훔쳐갔어요!</div>` : ''}
     <div class="multi-grid">
-      ${results.map(r=>{
+      ${sorted.map(r=>{
         const it = ITEMS[r.key];
         return `<div class="multi-item" style="${r.stolen?'opacity:0.45;filter:grayscale(1);':''}">${r.stolen?'💀':it.emoji}<span class="mname" ${(!r.stolen && it.color)?`style="color:${it.color}"`:''}>${it.name}${r.stolen?' (도난)':''}</span></div>`;
       }).join('')}
@@ -1019,6 +1068,8 @@ function showMultiResult(results){
 document.getElementById('orb').addEventListener('click', ()=>doPull(1));
 document.getElementById('pull1').addEventListener('click', ()=>doPull(1));
 document.getElementById('pull10').addEventListener('click', ()=>doPull(10));
+document.getElementById('pull100').addEventListener('click', ()=>doPull(100));
+document.getElementById('pull1000').addEventListener('click', ()=>doPull(1000));
 document.getElementById('overlay').addEventListener('click', (e)=>{ if(e.target.id==='overlay') closeOverlay(); });
 
 document.getElementById('useTicketBtn').addEventListener('click', ()=>{
@@ -1060,15 +1111,16 @@ function renderGachaExtras(){
 const betInput = document.getElementById('betInput');
 function clampBet(){
   let v = parseInt(betInput.value)||300;
-  v = Math.max(300, Math.min(5000, v));
+  v = Math.max(300, Math.min(500000, v));
   betInput.value = v;
   return v;
 }
-document.getElementById('betMinus').addEventListener('click', ()=>{ betInput.value = Math.max(300,(parseInt(betInput.value)||300)-100); });
-document.getElementById('betPlus').addEventListener('click', ()=>{ betInput.value = Math.min(5000,(parseInt(betInput.value)||300)+100); });
+document.getElementById('betMinus').addEventListener('click', ()=>{ betInput.value = Math.max(300,(parseInt(betInput.value)||300)-1000); });
+document.getElementById('betPlus').addEventListener('click', ()=>{ betInput.value = Math.min(500000,(parseInt(betInput.value)||300)+1000); });
 document.querySelectorAll('[data-bet]').forEach(b=>b.addEventListener('click', ()=>{ betInput.value = b.dataset.bet; }));
 
-const SLOT_SYMS = ['🐚','🦪','⭐','💎','🌊','🐠'];
+const SLOT_SYMS = ['🐚','🦪','⭐','🌊','🐠'];
+const SLOT_JACKPOT_SYM = '💎';
 let spinning = false;
 document.getElementById('spinBtn').addEventListener('click', ()=>{
   if(spinning) return;
@@ -1080,28 +1132,51 @@ document.getElementById('spinBtn').addEventListener('click', ()=>{
   const reels = [document.getElementById('reel1'),document.getElementById('reel2'),document.getElementById('reel3')];
   reels.forEach(r=>r.classList.add('spin'));
   sfxClick();
-  let ticks = 0;
   const iv = setInterval(()=>{
     reels.forEach(r=>r.querySelector('.reel-inner').textContent = SLOT_SYMS[Math.floor(Math.random()*SLOT_SYMS.length)]);
-    ticks++;
   }, 80);
 
   setTimeout(()=>{
     clearInterval(iv);
     reels.forEach(r=>r.classList.remove('spin'));
-    const win = Math.random() < 0.20;
-    const finalSym = win ? '💎' : SLOT_SYMS[Math.floor(Math.random()*(SLOT_SYMS.length-1))];
-    reels.forEach(r=>r.querySelector('.reel-inner').textContent = finalSym);
+
+    const roll = Math.random();
+    const isJackpot = roll < 0.05;
+    const isWin = isJackpot || roll < 0.20;
+
+    let finalSyms;
+    if(isJackpot){
+      finalSyms = [SLOT_JACKPOT_SYM, SLOT_JACKPOT_SYM, SLOT_JACKPOT_SYM];
+    } else if(isWin){
+      const sym = SLOT_SYMS[Math.floor(Math.random()*SLOT_SYMS.length)];
+      finalSyms = [sym, sym, sym];
+    } else {
+      // 서로 다른 그림 3개 (탈락) 보장
+      let a = SLOT_SYMS[Math.floor(Math.random()*SLOT_SYMS.length)];
+      let b, c;
+      do{ b = SLOT_SYMS[Math.floor(Math.random()*SLOT_SYMS.length)]; }while(b===a);
+      do{ c = SLOT_SYMS[Math.floor(Math.random()*SLOT_SYMS.length)]; }while(c===a||c===b);
+      finalSyms = [a,b,c];
+    }
+    reels.forEach((r,i)=>r.querySelector('.reel-inner').textContent = finalSyms[i]);
+
     state.stats.slot += 1;
     const machineRect = document.querySelector('.slot-machine').getBoundingClientRect();
-    if(win){
-      const gain = bet*2;
+    if(isWin){
+      const mult = isJackpot ? 10 : 2;
+      const gain = bet*mult;
       state.coins += gain;
       state.stats.slotWins += 1;
       if(gain > state.stats.slotBestWin) state.stats.slotBestWin = gain;
-      sfxWin();
-      floatText('+'+fmt(gain), machineRect.left+machineRect.width/2-30, machineRect.top+40, '#7ee787');
-      toast(`🎉 성공! +${fmt(gain)}🪙`);
+      if(isJackpot){
+        sfxLegendary();
+        burstParticles(machineRect.left+machineRect.width/2, machineRect.top+60, '#ffe18a');
+        toast(`💎 잭팟!!! +${fmt(gain)}🪙 (×10)`);
+      } else {
+        sfxWin();
+        toast(`🎉 성공! +${fmt(gain)}🪙 (×2)`);
+      }
+      floatText('+'+fmt(gain), machineRect.left+machineRect.width/2-30, machineRect.top+40, isJackpot?'#ffe18a':'#7ee787');
     } else {
       sfxLose();
       floatText('-'+fmt(bet), machineRect.left+machineRect.width/2-30, machineRect.top+40, '#e0654f');
@@ -1311,6 +1386,146 @@ function endOe(){
   renderAll();
 }
 renderOeLadder();
+
+/* ============ SPORTS BETTING ============ */
+const TEAM_POOL = [
+  { name:'아르헨티나', flag:'🇦🇷', rank:1 },
+  { name:'스페인',     flag:'🇪🇸', rank:2 },
+  { name:'프랑스',     flag:'🇫🇷', rank:3 },
+  { name:'잉글랜드',   flag:'🏴', rank:4 },
+  { name:'포르투갈',   flag:'🇵🇹', rank:5 },
+  { name:'브라질',     flag:'🇧🇷', rank:6 },
+  { name:'모로코',     flag:'🇲🇦', rank:7 },
+  { name:'네덜란드',   flag:'🇳🇱', rank:8 },
+  { name:'독일',       flag:'🇩🇪', rank:10 },
+  { name:'멕시코',     flag:'🇲🇽', rank:14 },
+  { name:'미국',       flag:'🇺🇸', rank:17 },
+  { name:'일본',       flag:'🇯🇵', rank:18 },
+  { name:'한국',       flag:'🇰🇷', rank:25 },
+  { name:'호주',       flag:'🇦🇺', rank:27 },
+  { name:'캐나다',     flag:'🇨🇦', rank:30 },
+];
+const MATCH_POOL = [
+  ['한국','브라질'], ['한국','일본'], ['브라질','프랑스'], ['한국','독일'],
+  ['멕시코','미국'], ['일본','아르헨티나'], ['호주','포르투갈'],
+];
+function findTeam(name){ return TEAM_POOL.find(t=>t.name===name); }
+function calcOdds(myRank, oppRank){
+  const diff = myRank - oppRank; // 양수면 내가 약팀(언더독)
+  let mult = 1.8 + diff*0.15;
+  mult = Math.max(1.1, Math.min(15, mult));
+  return Math.round(mult*100)/100;
+}
+let sp = { teamA:null, teamB:null, pick:null, bet:1000 };
+function newSpMatch(){
+  const pair = MATCH_POOL[Math.floor(Math.random()*MATCH_POOL.length)];
+  sp.teamA = findTeam(pair[0]);
+  sp.teamB = findTeam(pair[1]);
+  sp.pick = null;
+  renderSports();
+}
+function renderSports(){
+  if(!sp.teamA){ newSpMatch(); return; }
+  const box = document.getElementById('sportsBox');
+  const oddsA = calcOdds(sp.teamA.rank, sp.teamB.rank);
+  const oddsB = calcOdds(sp.teamB.rank, sp.teamA.rank);
+  const names = [sp.teamA.name, sp.teamB.name];
+  const isKoreaJapan = names.includes('한국') && names.includes('일본');
+  box.innerHTML = `
+    ${isKoreaJapan ? `<div style="text-align:center;color:var(--gold2);font-weight:800;margin-bottom:10px;">🔥 한일전은 무조건 대한민국이 승리합니다! 🇰🇷</div>` : ''}
+    <div class="sp-match">
+      <div class="sp-team ${sp.pick==='A'?'picked':''}" id="spPickA">
+        <div class="flag">${sp.teamA.flag}</div>
+        <div class="tname">${sp.teamA.name}</div>
+        <div class="trank">FIFA ${sp.teamA.rank}위</div>
+        <div class="todds">×${oddsA}</div>
+      </div>
+      <div class="sp-vs">VS</div>
+      <div class="sp-team ${sp.pick==='B'?'picked':''}" id="spPickB">
+        <div class="flag">${sp.teamB.flag}</div>
+        <div class="tname">${sp.teamB.name}</div>
+        <div class="trank">FIFA ${sp.teamB.rank}위</div>
+        <div class="todds">×${oddsB}</div>
+      </div>
+    </div>
+    <div class="sp-resultbox" id="spResultBox"></div>
+    <div class="bet-row">
+      <button class="btn btn-outline btn-sm" id="spBetMinus">−1,000</button>
+      <input type="number" id="spBetInput" value="${sp.bet}" min="500" max="500000" step="1000">
+      <button class="btn btn-outline btn-sm" id="spBetPlus">+1,000</button>
+    </div>
+    <div class="bet-presets">
+      <button class="btn btn-outline btn-sm" data-spbet="500">500</button>
+      <button class="btn btn-outline btn-sm" data-spbet="10000">10,000</button>
+      <button class="btn btn-outline btn-sm" data-spbet="100000">100,000</button>
+      <button class="btn btn-outline btn-sm" data-spbet="500000">500,000(MAX)</button>
+    </div>
+    <div class="bet-presets">
+      <button class="btn btn-gold" id="spConfirm" style="flex:1;">⚽ 베팅 확정</button>
+      <button class="btn btn-outline" id="spNewMatch" style="flex:1;">🔄 다른 경기</button>
+    </div>
+  `;
+  document.getElementById('spPickA').addEventListener('click', ()=>{ sp.pick='A'; renderSports(); });
+  document.getElementById('spPickB').addEventListener('click', ()=>{ sp.pick='B'; renderSports(); });
+  document.getElementById('spBetMinus').addEventListener('click', ()=>{
+    const i=document.getElementById('spBetInput'); i.value=Math.max(500,(parseInt(i.value)||500)-1000); sp.bet=parseInt(i.value);
+  });
+  document.getElementById('spBetPlus').addEventListener('click', ()=>{
+    const i=document.getElementById('spBetInput'); i.value=Math.min(500000,(parseInt(i.value)||500)+1000); sp.bet=parseInt(i.value);
+  });
+  document.querySelectorAll('[data-spbet]').forEach(b=>b.addEventListener('click', ()=>{
+    document.getElementById('spBetInput').value = b.dataset.spbet;
+    sp.bet = parseInt(b.dataset.spbet);
+  }));
+  document.getElementById('spNewMatch').addEventListener('click', newSpMatch);
+  document.getElementById('spConfirm').addEventListener('click', playSportsBet);
+}
+function playSportsBet(){
+  if(!sp.pick){ toast('베팅할 팀을 먼저 선택해주세요!'); return; }
+  const betInput = document.getElementById('spBetInput');
+  let bet = parseInt(betInput.value)||500;
+  bet = Math.max(500, Math.min(500000, bet));
+  if(state.coins < bet){ toast('코인이 부족합니다!'); return; }
+  state.coins -= bet;
+  renderWallet();
+  sfxClick();
+  const box = document.getElementById('spResultBox');
+  box.innerHTML = `<span style="color:var(--gray);">경기 진행 중...</span>`;
+  sfxOpen();
+  setTimeout(()=>{
+    const oddsA = calcOdds(sp.teamA.rank, sp.teamB.rank);
+    const oddsB = calcOdds(sp.teamB.rank, sp.teamA.rank);
+    // 랭킹이 높은(숫자가 작은) 팀이 이길 확률이 더 높음
+    const strA = 1/sp.teamA.rank, strB = 1/sp.teamB.rank;
+    const probA = strA/(strA+strB);
+    const names = [sp.teamA.name, sp.teamB.name];
+    const isKoreaJapan = names.includes('한국') && names.includes('일본');
+    let winnerIsA;
+    if(isKoreaJapan){
+      winnerIsA = sp.teamA.name === '한국';
+    } else {
+      winnerIsA = Math.random() < probA;
+    }
+    const myWin = (sp.pick==='A' && winnerIsA) || (sp.pick==='B' && !winnerIsA);
+    const winnerTeam = winnerIsA ? sp.teamA : sp.teamB;
+    if(myWin){
+      const mult = sp.pick==='A' ? oddsA : oddsB;
+      const gain = Math.round(bet*mult);
+      state.coins += gain;
+      sfxWin();
+      box.innerHTML = `<span style="color:#7ee787;">🎉 ${winnerTeam.flag} ${winnerTeam.name} 승리! 예측 성공 ×${mult} → +${fmt(gain)}🪙</span>`;
+      const r = document.querySelector('#panel-sports .slot-machine').getBoundingClientRect();
+      floatText('+'+fmt(gain), r.left+r.width/2-20, r.top+20, '#7ee787');
+    } else {
+      sfxLose();
+      box.innerHTML = `<span style="color:var(--danger);">😢 ${winnerTeam.flag} ${winnerTeam.name} 승리... 예측 실패! 베팅금 전액(${fmt(bet)}🪙) 0원</span>`;
+      const r = document.querySelector('#panel-sports .slot-machine').getBoundingClientRect();
+      floatText('-'+fmt(bet), r.left+r.width/2-20, r.top+20, '#e0654f');
+    }
+    renderAll();
+  }, 900);
+}
+newSpMatch();
 
 /* ============ CREDIT GRADE ============ */
 const CREDIT_GRADES = [
